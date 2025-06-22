@@ -1,0 +1,53 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_224901",
+    "total_errors": 3,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T22:45:11.967464",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_224511.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:45:45.589689",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [\"N/A\"]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[\"N/A\"]",
+      "confidence": 0.5,
+      "image_path": "error_images/safety_concern_20250621_224545.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:46:05.222969",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Foreign objects (plastic bag, tool on green mat) are present next to the liquid handler deck. This poses a potential risk of interfering with robot operations or causing contamination.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Foreign objects (plastic bag, tool on green mat) are present next to the liquid handler deck. This poses a potential risk of interfering with robot operations or causing contamination.",
+      "confidence": 0.95,
+      "image_path": "error_images/safety_concern_20250621_224605.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 3
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 3
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 3
+    }
+  }
+}

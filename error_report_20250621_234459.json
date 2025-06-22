@@ -1,0 +1,97 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_234459",
+    "total_errors": 7,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T23:43:23.300253",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [UNKNOWN - Unable to monitor robot or experiment for potential safety issues due to incorrect camera feed.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[UNKNOWN - Unable to monitor robot or experiment for potential safety issues due to incorrect camera feed.]",
+      "confidence": 0.5,
+      "image_path": "error_images/safety_concern_20250621_234323.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:43:41.053414",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Cannot be determined - incorrect camera view.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Cannot be determined - incorrect camera view.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_234341.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:43:56.523313",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNVERIFIABLE",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNVERIFIABLE",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_234356.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:44:10.532132",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_234410.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:44:25.203544",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: The experiment is completely unmonitored, which is a critical safety and procedural failure.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "The experiment is completely unmonitored, which is a critical safety and procedural failure.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_234425.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:44:35.321159",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL - Loss of visual monitoring of robotic equipment is a safety issue.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL - Loss of visual monitoring of robotic equipment is a safety issue.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_234435.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:44:47.209027",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL - The experiment is unmonitored, creating a potential for undetected safety hazards or process failures.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL - The experiment is unmonitored, creating a potential for undetected safety hazards or process failures.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_234447.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 7
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 7
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 7
+    }
+  }
+}

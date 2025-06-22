@@ -1,0 +1,42 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_234039",
+    "total_errors": 2,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T23:40:12.174411",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: NOT ASSESSABLE",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "NOT ASSESSABLE",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_234012.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:40:36.127850",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL - The process is entirely unmonitored due to a complete loss of visual feed from the work area.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL - The process is entirely unmonitored due to a complete loss of visual feed from the work area.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_234036.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 2
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 2
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 2
+    }
+  }
+}

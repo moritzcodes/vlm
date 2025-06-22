@@ -1,0 +1,218 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_233836",
+    "total_errors": 18,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T23:38:10.605592",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233810.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:11.954516",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233811.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:13.513890",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233813.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:14.975404",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233814.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:16.539416",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233816.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:18.096776",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233818.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:19.565850",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233819.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:21.128221",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233821.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:22.686301",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233822.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:24.247752",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233824.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:25.704841",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233825.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:27.265387",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233827.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:28.721424",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233828.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:30.276291",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233830.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:31.838223",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233831.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:33.317423",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233833.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:34.881750",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233834.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T23:38:36.453430",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_233836.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 18
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 18
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 18
+    }
+  }
+}

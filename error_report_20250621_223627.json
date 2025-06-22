@@ -1,0 +1,42 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_223627",
+    "total_errors": 2,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T22:36:04.240460",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_223604.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:36:20.321575",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [Unable to assess. Workspace not visible.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[Unable to assess. Workspace not visible.]",
+      "confidence": 0.5,
+      "image_path": "error_images/safety_concern_20250621_223620.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 2
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 2
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 2
+    }
+  }
+}

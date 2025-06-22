@@ -83,9 +83,9 @@ class LiquidHandlerMonitor:
         self.cap = None
         self.model = None
         self.running = False
-        self.analysis_queue = queue.Queue(maxsize=2)
+        self.analysis_queue = queue.Queue(maxsize=3)
         self.last_analysis_time = 0
-        self.analysis_interval = 3.0  # Analyze every 3 seconds
+        self.analysis_interval = 1.5  # Analyze every 1.5 seconds (faster)
         
         # Error tracking
         self.error_events: List[ErrorEvent] = []
@@ -102,6 +102,21 @@ class LiquidHandlerMonitor:
         # Status tracking
         self.last_description = "Initializing..."
         self.last_analysis_result = {}
+        
+        # Smart analysis tracking
+        self.skip_analysis_count = 0
+        self.consecutive_arm_blocking = 0
+        
+        # Simple experimental goals
+        self.current_goal = ""
+        self.available_goals = {
+            "1": "Wells should turn purple (blue + red mixing)",
+            "2": "Column 1 wells get blue water then red reagent", 
+            "3": "Proper PCR master mix without air bubbles",
+            "4": "Clean tip washing between reagents",
+            "5": "No spills or contamination",
+            "6": "All pipetting operations complete successfully"
+        }
         
         # Image saving for error documentation
         self.save_error_images = True
@@ -374,12 +389,20 @@ class LiquidHandlerMonitor:
     def analyze_frame_with_ai(self, frame):
         """Send frame to AI for comprehensive analysis"""
         try:
+            # Resize frame for faster processing while maintaining quality
+            height, width = frame.shape[:2]
+            if width > 1280:  # Downscale large frames
+                scale_factor = 1280 / width
+                new_width = int(width * scale_factor)
+                new_height = int(height * scale_factor)
+                frame = cv2.resize(frame, (new_width, new_height))
+            
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(rgb_frame)
             
             import io
             img_buffer = io.BytesIO()
-            pil_image.save(img_buffer, format='JPEG', quality=90)
+            pil_image.save(img_buffer, format='JPEG', quality=75)  # Reduced quality for speed
             img_bytes = img_buffer.getvalue()
             
             from google.genai import types
@@ -400,6 +423,14 @@ EXPECTED COLORS: {', '.join(step.expected_colors)}
 EXPECTED POSITIONS: {', '.join(step.expected_positions)}
 """
 
+            # Add simple goal context
+            experiment_context = ""
+            if self.current_goal:
+                experiment_context = f"""
+EXPERIMENT GOAL: {self.current_goal}
+MONITOR FOR: Success/failure relative to this goal
+"""
+            
             # Add Opentrons labware context
             labware_context = """
 OPENTRONS LABWARE CONTEXT:
@@ -414,41 +445,33 @@ PROTOCOL SPECIFICS (from failing-protocol-5.py):
 - Viscous liquid issue: Flow rates too fast for glycerol, causes poor mixing
 """
 
-            prompt = f"""LIQUID HANDLER MONITORING SYSTEM
-PRIMARY GOAL: Verify correct liquid handling procedure execution and detect errors immediately.
-
+            prompt = f"""LIQUID HANDLER MONITORING - FAST ANALYSIS
 {procedure_context}
+{experiment_context}
 
-CORE MONITORING OBJECTIVES:
-1. VERIFY PROCEDURE COMPLIANCE: Are the expected actions being performed correctly?
-2. DETECT LIQUID HANDLING ERRORS: Wrong colors, failed mixing, contamination
-3. IDENTIFY FAILED OPERATIONS: Which specific wells/actions have problems?
-4. ASSESS SAFETY COMPLIANCE: Any spills, contamination risks, or unsafe conditions?
+ANALYZE:
+1. STATUS: Robot arm blocking view? (YES/NO)
+2. PLATE: Can see well contents clearly? (YES/NO) 
+3. WELLS: Color in each well (A1-A6, B1-B6)
+4. ERRORS: Any failed wells or safety issues?
+5. COMPLIANCE: Following procedure correctly?
 
-ANALYSIS FOCUS:
-- PROCEDURE EXECUTION: Is the current step being performed as expected?
-- LIQUID COLORS: Do well contents match expected colors for this procedure step?
-- MIXING QUALITY: Are liquids properly mixed (purple for blue+red mixing)?
-- ERROR DETECTION: Identify specific wells or operations that have failed
-- SAFETY MONITORING: Detect spills, contamination, or other safety issues
+CONTEXT:
+- Blue+Red mixing → expect purple result
+- Robot arm blocking = normal operation
+- Focus on visible well plate when clear
 
-OPERATIONAL CONTEXT:
-- Robot arm movement is normal operation (not an error)
-- Focus analysis on visible well plate contents when robot is not blocking view
-- For blue-red mixing: Expect blue → red addition → purple mixed result
-- For PCR prep: Expect blue water → red master-mix → proper mixing
-
-RESPONSE FORMAT:
+FORMAT:
 STATUS: [NORMAL/WARNING/ERROR/CRITICAL]
-ARM_BLOCKING: [YES/NO - robot arm currently blocking view]
-PLATE_VISIBLE: [YES/NO - can analyze well plate contents]
+ARM_BLOCKING: [YES/NO]
+PLATE_VISIBLE: [YES/NO]
 WELL_ANALYSIS: [A1:color, A2:color, A3:color, A4:color, A5:color, A6:color, B1:color, B2:color, B3:color, B4:color, B5:color, B6:color]
-FAILED_WELLS: [specific wells with incorrect results or "NONE"]
-COMPLIANCE: [YES/NO - is procedure being followed correctly]
-ERRORS: [specific liquid handling errors detected or "NONE"]
-SAFETY: [safety issues detected or "OK"]
+FAILED_WELLS: [wells with issues or "NONE"]
+COMPLIANCE: [YES/NO]
+ERRORS: [issues found or "NONE"]
+SAFETY: [OK or describe issue]
 CONFIDENCE: [0.0-1.0]
-DESCRIPTION: [brief description focused on procedure execution status]"""
+DESCRIPTION: [brief status]"""
 
             response = self.model.models.generate_content(
                 model="gemini-2.5-pro",
@@ -1348,18 +1371,27 @@ DESCRIPTION: [brief description focused on procedure execution status]"""
                 if not self.analysis_queue.empty():
                     frame = self.analysis_queue.get(timeout=1)
                     
-                    print("🧠 Analyzing liquid handler operations...")
+                    print("🧠 Fast AI analysis...")
+                    start_time = time.time()
                     analysis_result = self.analyze_frame_with_ai(frame)
+                    analysis_time = time.time() - start_time
+                    print(f"⚡ Analysis completed in {analysis_time:.2f}s")
                     
                     # Store result
                     self.last_analysis_result = analysis_result
                     self.last_description = analysis_result.get("description", "Analysis failed")
                     
-                    # Check compliance
-                    self.check_procedure_compliance(analysis_result, frame)
-                    self.check_color_compliance(analysis_result, frame)
-                    self.check_well_compliance(analysis_result, frame)
-                    self.check_safety_compliance(analysis_result, frame)
+                    # Only do expensive compliance checks if not just robot arm blocking
+                    arm_blocking = analysis_result.get("arm_blocking", False)
+                    if not arm_blocking:
+                        # Check compliance
+                        self.check_procedure_compliance(analysis_result, frame)
+                        self.check_color_compliance(analysis_result, frame)
+                        self.check_well_compliance(analysis_result, frame)
+                        self.check_safety_compliance(analysis_result, frame)
+                    else:
+                        # Skip expensive compliance checks when arm is blocking
+                        print("🤖 Robot arm active - skipping detailed compliance checks")
                     
                     # Print status
                     status = analysis_result.get("status", "UNKNOWN")
@@ -1621,40 +1653,68 @@ DESCRIPTION: [brief description focused on procedure execution status]"""
 
     def draw_procedure_indicator(self, frame, ui_colors, x, y):
         """Draw much larger procedure status panel"""
-        if not self.current_procedure:
+        if not self.current_procedure and not self.current_goal:
+            return
+            
+        # Determine panel content and size
+        has_procedure = bool(self.current_procedure)
+        has_goal = bool(self.current_goal)
+        
+        panel_width = 450
+        panel_height = 90 if not has_goal else 120
+        
+        self.draw_glass_panel(frame, (x, y), (x + panel_width, y + panel_height), ui_colors['glass'], 0.6)
+        
+        # Show experiment goal if set
+        if has_goal:
+            cv2.circle(frame, (x + 30, y + 25), 12, ui_colors['success'], -1)
+            cv2.circle(frame, (x + 30, y + 25), 12, ui_colors['accent_glow'], 2)
+            cv2.circle(frame, (x + 30, y + 25), 8, (255, 255, 255), 2)
+            
+            cv2.putText(frame, "EXPERIMENT GOAL", (x + 50, y + 20), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, ui_colors['text_primary'], 2)
+            
+            # Truncate long goals for display
+            goal_text = self.current_goal[:60] + "..." if len(self.current_goal) > 60 else self.current_goal
+            cv2.putText(frame, goal_text, (x + 50, y + 40), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.4, ui_colors['success'], 1)
+            
+            # Adjust y position for procedure info if both are present
+            if has_procedure:
+                y += 50
+        
+        if not has_procedure:
             return
             
         proc_name = self.current_procedure.replace('_', ' ').upper()
         
-        # Much larger panel for better visibility
-        panel_width = 450
-        panel_height = 90
-        self.draw_glass_panel(frame, (x, y), (x + panel_width, y + panel_height), ui_colors['glass'], 0.6)
+        # Procedure indicator  
+        proc_y = y + 30 if not has_goal else y + 25
         
         # Much larger procedure indicator
-        cv2.circle(frame, (x + 30, y + 30), 15, ui_colors['accent'], -1)
-        cv2.circle(frame, (x + 30, y + 30), 15, ui_colors['accent_glow'], 3)
-        cv2.circle(frame, (x + 30, y + 30), 10, (255, 255, 255), 2)
+        cv2.circle(frame, (x + 30, proc_y), 15, ui_colors['accent'], -1)
+        cv2.circle(frame, (x + 30, proc_y), 15, ui_colors['accent_glow'], 3)
+        cv2.circle(frame, (x + 30, proc_y), 10, (255, 255, 255), 2)
         
         # Larger procedure name
-        cv2.putText(frame, "ACTIVE PROCEDURE", (x + 55, y + 25), 
+        cv2.putText(frame, "ACTIVE PROCEDURE", (x + 55, proc_y - 5), 
                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, ui_colors['text_primary'], 2)
         
         # Much larger procedure name and step
         step_text = f"{proc_name}"
-        cv2.putText(frame, step_text, (x + 55, y + 50), 
+        cv2.putText(frame, step_text, (x + 55, proc_y + 20), 
                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, ui_colors['accent'], 2)
         
         # Larger step progress
         step_progress = f"STEP {self.current_step + 1} OF {len(self.procedures[self.current_procedure])}"
-        cv2.putText(frame, step_progress, (x + 55, y + 70), 
+        cv2.putText(frame, step_progress, (x + 55, proc_y + 40), 
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, ui_colors['text_secondary'], 1)
         
         # Larger progress bar for steps
         bar_width = 300
         bar_height = 6
         bar_x = x + 55
-        bar_y = y + 78
+        bar_y = proc_y + 48
         progress = (self.current_step + 1) / len(self.procedures[self.current_procedure])
         
         cv2.rectangle(frame, (bar_x, bar_y), (bar_x + bar_width, bar_y + bar_height), ui_colors['background'], -1)
@@ -1961,7 +2021,24 @@ DESCRIPTION: [brief description focused on procedure execution status]"""
         print("🧪 Individual well tracking for blue-red mixing")
         print("🤖 AI-powered VLM feedback with actionable insights")
         print("🎨 Frame cropping and filtering capabilities")
+        print("⚡ PERFORMANCE OPTIMIZED:")
+        print(f"   • Analysis interval: {self.analysis_interval}s (faster)")
+        print("   • Smart frame skipping (3x speed boost)")
+        print("   • Optimized image processing (reduced quality/size)")
+        print("   • Streamlined AI prompts (faster responses)")
+        
+        # Simple goal setup at startup
+        print("\n🎯 Quick Goal Setup:")
+        setup_now = input("Set experiment goal now? (y/n): ").strip().lower()
+        if setup_now in ['y', 'yes']:
+            self.set_experiment_goal()
+        else:
+            print("💡 Press 'e' during monitoring to set goal")
+        
         print("\n⚠️  Controls:")
+        print("   Experiment Setup:")
+        print("      'e' = Set experiment goal (quick selection)")
+        print("      'i' = Show current setup")
         print("   Procedures:")
         print("      's' = Start sample preparation procedure")
         print("      'b' = Start blue-red mixing procedure")
@@ -2018,26 +2095,44 @@ DESCRIPTION: [brief description focused on procedure execution status]"""
                 # Handle mouse events for crop selection
                 cv2.setMouseCallback('🧪 Liquid Handler Monitor', self.mouse_callback)
                 
-                # Queue frame for analysis
+                # Smart frame queuing for analysis
                 if (current_time - self.last_analysis_time) >= self.analysis_interval:
-                    try:
-                        while not self.analysis_queue.empty():
-                            try:
-                                self.analysis_queue.get_nowait()
-                            except queue.Empty:
-                                break
-                        
-                        # Use original frame for AI analysis (before filters)
-                        self.analysis_queue.put_nowait(frame.copy())
+                    should_analyze = self.should_analyze_frame()
+                    
+                    if should_analyze:
+                        try:
+                            # Clear old frames from queue
+                            while not self.analysis_queue.empty():
+                                try:
+                                    self.analysis_queue.get_nowait()
+                                except queue.Empty:
+                                    break
+                            
+                            # Use original frame for AI analysis (before filters)
+                            self.analysis_queue.put_nowait(frame.copy())
+                            self.last_analysis_time = current_time
+                            self.skip_analysis_count = 0
+                            
+                        except queue.Full:
+                            pass
+                    else:
+                        self.skip_analysis_count += 1
+                        # Still update timing to prevent backlog
                         self.last_analysis_time = current_time
                         
-                    except queue.Full:
-                        pass
+                        if self.skip_analysis_count % 5 == 0:  # Every 5 skipped frames
+                            print(f"⏭️  Skipped {self.skip_analysis_count} analyses (optimizing speed)")
                 
                 # Handle keyboard input
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q'):
                     break
+                elif key == ord('e'):
+                    # Set experiment goal
+                    self.set_experiment_goal()
+                elif key == ord('i'):
+                    # Show current experimental setup
+                    self.show_experiment_info()
                 elif key == ord('s'):
                     # Start sample preparation procedure
                     self.start_procedure("sample_preparation")
@@ -2125,6 +2220,79 @@ DESCRIPTION: [brief description focused on procedure execution status]"""
             # Save error report
             self.generate_error_report()
             print("✅ Liquid Handler Monitor stopped")
+
+    def set_experiment_goal(self):
+        """Set simple experimental goal from predefined list"""
+        print("\n" + "="*50)
+        print("🎯 SELECT EXPERIMENT GOAL")
+        print("="*50)
+        
+        for key, goal in self.available_goals.items():
+            print(f"  {key}. {goal}")
+        print("  0. No specific goal (general monitoring)")
+        
+        choice = input("\nSelect goal (0-6): ").strip()
+        
+        if choice in self.available_goals:
+            self.current_goal = self.available_goals[choice]
+            print(f"\n✅ Goal set: {self.current_goal}")
+        elif choice == "0":
+            self.current_goal = ""
+            print("\n✅ General monitoring mode")
+        else:
+            print("❌ Invalid choice - no goal set")
+        
+        print("="*50)
+        return bool(self.current_goal)
+
+    def show_experiment_info(self):
+        """Display current experimental setup information"""
+        print("\n" + "="*50)
+        print("📊 CURRENT SETUP")
+        print("="*50)
+        
+        if self.current_goal:
+            print(f"🎯 Goal: {self.current_goal}")
+        else:
+            print("❌ No goal set - Press 'e' to select one")
+        
+        if self.current_procedure:
+            print(f"🧬 Procedure: {self.current_procedure}")
+            print(f"📋 Step: {self.current_step + 1}/{len(self.procedures[self.current_procedure])}")
+        else:
+            print("🔄 No active procedure")
+        
+        print(f"⚡ Speed: {self.analysis_interval}s intervals")
+        errors = len(self.error_events) if hasattr(self, 'error_events') else 0
+        print(f"🔍 Errors: {errors}")
+        print("="*50)
+
+    def should_analyze_frame(self):
+        """Determine if current frame should be analyzed (smart skipping)"""
+        # Always analyze if we haven't analyzed recently
+        if not self.last_analysis_result:
+            return True
+        
+        # Check if robot arm was blocking in last analysis
+        arm_blocking = self.last_analysis_result.get("arm_blocking", False)
+        
+        if arm_blocking:
+            self.consecutive_arm_blocking += 1
+            # Skip analysis if arm has been blocking for multiple frames
+            if self.consecutive_arm_blocking > 3:
+                return False  # Skip until arm moves
+        else:
+            self.consecutive_arm_blocking = 0
+        
+        # Always analyze if we have a procedure running and plate is visible
+        if self.current_procedure and not arm_blocking:
+            return True
+        
+        # Skip some frames during normal operation to speed up
+        if self.skip_analysis_count < 2:  # Analyze every 3rd eligible frame
+            return True
+        
+        return False
 
     def generate_error_report(self):
         """Generate comprehensive error report"""
