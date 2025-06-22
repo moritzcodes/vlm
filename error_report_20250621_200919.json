@@ -1,0 +1,44 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_200919",
+    "total_errors": 2,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T20:09:13.011965",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: OK. An emergency stop button is visible near the robot. However, a screwdriver and other loose items are on the work surface next to the deck, which should be cleared before operation.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "OK. An emergency stop button is visible near the robot. However, a screwdriver and other loose items are on the work surface next to the deck, which should be cleared before operation.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_200912.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T20:09:13.021138",
+      "error_type": "CONTAMINATION_RISK",
+      "severity": "CRITICAL",
+      "description": "Contamination risk: NONE. The deck is clean with no visible spills or contamination. Labware appears correctly seated. The status overlay reports \"Errors: 0\".",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Clean operation",
+      "actual_state": "NONE. The deck is clean with no visible spills or contamination. Labware appears correctly seated. The status overlay reports \"Errors: 0\".",
+      "confidence": 1.0,
+      "image_path": "error_images/contamination_risk_20250621_200913.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1,
+      "CRITICAL": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1,
+      "CONTAMINATION_RISK": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 2
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_202813",
+    "total_errors": 6,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T20:27:19.960947",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: OK. A red emergency stop button is visible and accessible in the upper right corner. The surrounding work area has some minor clutter (tools, bags) but no immediate safety hazards to the robot's operation are visible.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "OK. A red emergency stop button is visible and accessible in the upper right corner. The surrounding work area has some minor clutter (tools, bags) but no immediate safety hazards to the robot's operation are visible.",
+      "confidence": 0.98,
+      "image_path": "error_images/safety_concern_20250621_202719.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T20:27:19.968935",
+      "error_type": "CONTAMINATION_RISK",
+      "severity": "CRITICAL",
+      "description": "Contamination risk: NONE. The deck appears clean with no visible spills. The labware is correctly seated in the designated slots. The liquid in the reservoir at position 2 looks slightly cloudier than at position 1",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Clean operation",
+      "actual_state": "NONE. The deck appears clean with no visible spills. The labware is correctly seated in the designated slots. The liquid in the reservoir at position 2 looks slightly cloudier than at position 1",
+      "confidence": 0.98,
+      "image_path": "error_images/contamination_risk_20250621_202719.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T20:27:34.142185",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: The inability to visually monitor the equipment is a critical safety issue. The operator cannot observe potential malfunctions, spills, or other hazards.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "The inability to visually monitor the equipment is a critical safety issue. The operator cannot observe potential malfunctions, spills, or other hazards.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_202734.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T20:27:57.267006",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: OK. There are no visible physical safety hazards on the robot deck. The primary concern is operational due to the inconsistent status reported by the software, which could lead to unpredictable behavior if a procedure is started.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "OK. There are no visible physical safety hazards on the robot deck. The primary concern is operational due to the inconsistent status reported by the software, which could lead to unpredictable behavior if a procedure is started.",
+      "confidence": 0.95,
+      "image_path": "error_images/safety_concern_20250621_202757.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T20:27:57.275427",
+      "error_type": "CONTAMINATION_RISK",
+      "severity": "CRITICAL",
+      "description": "Contamination risk: The system's own monitor reports \"Errors: 2\". This contradicts the \"NORMAL\" status. The physical setup appears correct with no visible spills",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Clean operation",
+      "actual_state": "The system's own monitor reports \"Errors: 2\". This contradicts the \"NORMAL\" status. The physical setup appears correct with no visible spills",
+      "confidence": 0.95,
+      "image_path": "error_images/contamination_risk_20250621_202757.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T20:27:57.283813",
+      "error_type": "CONTAMINATION_RISK",
+      "severity": "CRITICAL",
+      "description": "Contamination risk: contamination",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Clean operation",
+      "actual_state": "contamination",
+      "confidence": 0.95,
+      "image_path": "error_images/contamination_risk_20250621_202757.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 3,
+      "CRITICAL": 3
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 3,
+      "CONTAMINATION_RISK": 3
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 6
+    }
+  }
+}

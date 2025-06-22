@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_200809",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T20:07:54.921779",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: OK - While the lack of video feed is an operational issue, there are no immediate visible safety hazards as the equipment is not seen to be operating. However, operating the equipment without a visual monitor would be unsafe.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "OK - While the lack of video feed is an operational issue, there are no immediate visible safety hazards as the equipment is not seen to be operating. However, operating the equipment without a visual monitor would be unsafe.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_200754.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}
