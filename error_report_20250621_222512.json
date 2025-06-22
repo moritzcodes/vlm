@@ -1,0 +1,86 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_222512",
+    "total_errors": 6,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T22:23:55.183043",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [UNKNOWN - View is completely obscured.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[UNKNOWN - View is completely obscured.]",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_222355.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:24:09.855276",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Cannot be assessed. The operational area is not in view.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Cannot be assessed. The operational area is not in view.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_222409.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:24:23.661339",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: N/A",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "N/A",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_222423.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:24:41.984351",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Unable to assess safety; workspace is not in view.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Unable to assess safety; workspace is not in view.",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_222441.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:24:55.439759",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Cannot Assess",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Cannot Assess",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_222455.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:25:05.330121",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: UNKNOWN",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "UNKNOWN",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_222505.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 6
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 6
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 6
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_221720",
+    "total_errors": 5,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T22:15:48.207466",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [UNVERIFIABLE. Loss of visibility prevents safety monitoring.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[UNVERIFIABLE. Loss of visibility prevents safety monitoring.]",
+      "confidence": 0.5,
+      "image_path": "error_images/safety_concern_20250621_221548.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:16:11.246749",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: WARNING: Beverage can (food/drink) detected on the desk in the immediate vicinity of the control interface. This violates standard laboratory safety protocols and poses a contamination risk.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "WARNING: Beverage can (food/drink) detected on the desk in the immediate vicinity of the control interface. This violates standard laboratory safety protocols and poses a contamination risk.",
+      "confidence": 0.95,
+      "image_path": "error_images/safety_concern_20250621_221611.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:16:31.693724",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL: The inability to visually monitor the liquid handler workspace represents a critical safety failure. The system's own logs confirm: \"HIGH ERROR: SAFETY_CONCERN\" and \"Loss of visibility prevents safety monitoring.\"",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL: The inability to visually monitor the liquid handler workspace represents a critical safety failure. The system's own logs confirm: \"HIGH ERROR: SAFETY_CONCERN\" and \"Loss of visibility prevents safety monitoring.\"",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_221631.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:16:50.777015",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL. The inability to visually monitor the equipment is a critical safety issue. The operator cannot observe potential spills, contamination, or other physical hazards on the robot deck.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL. The inability to visually monitor the equipment is a critical safety issue. The operator cannot observe potential spills, contamination, or other physical hazards on the robot deck.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_221650.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:17:15.048173",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [The on-screen monitor itself reports \"CRITICAL\" status and logs indicate a \"CONTAMINATION_RISK\" and \"SAFETY_CONCERN\".]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[The on-screen monitor itself reports \"CRITICAL\" status and logs indicate a \"CONTAMINATION_RISK\" and \"SAFETY_CONCERN\".]",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_221715.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 5
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 5
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 5
+    }
+  }
+}

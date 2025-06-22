@@ -1,0 +1,53 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_221248",
+    "total_errors": 3,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T22:12:05.072527",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [UNKNOWN]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[UNKNOWN]",
+      "confidence": 0.5,
+      "image_path": "error_images/safety_concern_20250621_221205.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:12:21.412975",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Cannot assess safety. The monitoring system is effectively blind to the operational area.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Cannot assess safety. The monitoring system is effectively blind to the operational area.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_221221.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T22:12:35.485996",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [UNKNOWN]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[UNKNOWN]",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_221235.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 3
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 3
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 3
+    }
+  }
+}

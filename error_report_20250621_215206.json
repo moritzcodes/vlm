@@ -1,0 +1,42 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_215206",
+    "total_errors": 2,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:51:35.947679",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [CRITICAL: Unauthorized person present in the operational area. The camera is blocked, preventing all monitoring of the workspace and equipment.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[CRITICAL: Unauthorized person present in the operational area. The camera is blocked, preventing all monitoring of the workspace and equipment.]",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_215135.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T21:51:50.084512",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL - Unauthorized personnel is physically blocking the camera and is present within the robotic operational area. This poses a significant risk of injury and system contamination.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL - Unauthorized personnel is physically blocking the camera and is present within the robotic operational area. This poses a significant risk of injury and system contamination.",
+      "confidence": 0.0,
+      "image_path": "error_images/safety_concern_20250621_215150.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 2
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 2
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 2
+    }
+  }
+}
