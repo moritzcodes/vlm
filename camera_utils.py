@@ -6,6 +6,7 @@ import queue
 import time
 from typing import Optional, Tuple, Generator
 import logging
+import os
 
 from config import config
 
@@ -25,37 +26,75 @@ class CameraHandler:
     def initialize_camera(self) -> bool:
         """Initialize camera capture"""
         try:
+            logger.info(f"Starting camera initialization with index: {self.camera_index}")
+            
+            # Load saved camera configuration if available
+            try:
+                import json
+                if os.path.exists("camera_config.json"):
+                    with open("camera_config.json", 'r') as f:
+                        camera_config = json.load(f)
+                        saved_camera_index = camera_config.get('current_camera')
+                        if saved_camera_index is not None:
+                            self.camera_index = saved_camera_index
+                            logger.info(f"Using saved camera index: {self.camera_index}")
+            except Exception as e:
+                logger.warning(f"Could not load camera config: {e}")
+            
             # Try different camera backends for better iPhone compatibility
             backends = [cv2.CAP_AVFOUNDATION, cv2.CAP_ANY]
             
             for backend in backends:
-                self.cap = cv2.VideoCapture(self.camera_index, backend)
-                if self.cap.isOpened():
-                    # Give camera time to initialize
-                    time.sleep(0.3)
+                logger.info(f"Trying to initialize camera {self.camera_index} with backend: {backend}")
+                
+                try:
+                    self.cap = cv2.VideoCapture(self.camera_index, backend)
                     
-                    # Test frame capture to ensure camera is working
-                    ret, test_frame = self.cap.read()
-                    if ret and test_frame is not None:
-                        logger.info(f"Camera initialized successfully with backend: {backend}")
+                    if self.cap.isOpened():
+                        logger.info("Camera opened successfully, testing frame capture...")
+                        # Give camera time to initialize
+                        time.sleep(0.5)
+                        
+                        # Test frame capture to ensure camera is working
+                        for attempt in range(3):  # Try multiple times
+                            logger.info(f"Frame capture attempt #{attempt + 1}")
+                            ret, test_frame = self.cap.read()
+                            if ret and test_frame is not None:
+                                logger.info(f"Frame captured successfully: {test_frame.shape}")
+                                logger.info(f"Camera initialized successfully with backend: {backend}")
+                                break
+                            time.sleep(0.2)
+                        else:
+                            logger.error(f"Camera opened but cannot capture frames with backend: {backend}")
+                            self.cap.release()
+                            continue
                         break
                     else:
-                        logger.warning(f"Camera opened but cannot capture frames with backend: {backend}")
+                        logger.warning(f"Failed to open camera with backend: {backend}")
+                except Exception as e:
+                    logger.error(f"Exception during camera initialization with backend {backend}: {e}")
+                    if self.cap:
                         self.cap.release()
-                        continue
+                    continue
             else:
                 logger.error("Failed to initialize camera with any backend")
                 return False
             
+            logger.info("Camera opened successfully, configuring settings...")
+            
             # Configure camera settings
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, config.CAMERA_WIDTH)
             self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, config.CAMERA_HEIGHT)
-            self.cap.set(cv2.CAP_PROP_FPS, config.TARGET_FPS)
+            
+            # Set FPS - be more conservative for iPhone cameras
+            target_fps = min(config.TARGET_FPS, 30)  # Limit to 30 FPS
+            self.cap.set(cv2.CAP_PROP_FPS, target_fps)
             
             # iPhone-specific optimizations
             if config.IPHONE_CAMERA_OPTIMIZATION:
+                logger.info("Applying iPhone camera optimizations...")
                 # Minimize buffer size for lower latency
-                self.cap.set(cv2.CAP_PROP_BUFFERSIZE, config.CAMERA_BUFFER_SIZE)
+                self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
                 
                 # iPhone camera optimizations
                 self.cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # Enable auto exposure
@@ -77,13 +116,16 @@ class CameraHandler:
             logger.info(f"📱 Camera {self.camera_index}: {actual_width}x{actual_height} @ {actual_fps:.1f}fps")
             
             # Detect if this might be an iPhone camera based on resolution
-            if actual_width == 1920 and actual_height == 1080:
+            if actual_width >= 1920 and actual_height >= 1080:
                 logger.info("🎯 High-resolution camera detected - likely iPhone camera")
             
+            logger.info("✅ Camera initialization completed successfully")
             return True
             
         except Exception as e:
             logger.error(f"Error initializing camera: {e}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return False
     
     def start_capture(self):
@@ -104,12 +146,17 @@ class CameraHandler:
         logger.info("Camera capture stopped")
     
     def _capture_frames(self):
-        """Continuously capture frames in a separate thread"""
+        """Continuously capture frames in a separate thread with connection monitoring"""
+        consecutive_failures = 0
+        last_successful_read = time.time()
+        
         while self.is_running:
             try:
                 ret, frame = self.cap.read()
-                if ret:
+                if ret and frame is not None:
                     self.frame_count += 1
+                    consecutive_failures = 0
+                    last_successful_read = time.time()
                     
                     # Skip frames based on configuration for performance
                     if self.frame_count % config.FRAME_SKIP_RATIO == 0:
@@ -123,12 +170,58 @@ class CameraHandler:
                             except queue.Empty:
                                 pass
                 else:
-                    logger.warning("Failed to read frame from camera")
-                    time.sleep(0.1)
+                    consecutive_failures += 1
+                    current_time = time.time()
+                    time_since_last_frame = current_time - last_successful_read
+                    
+                    # Check if we need to attempt reconnection
+                    if consecutive_failures > 10 or time_since_last_frame > config.USB_FRAME_READ_TIMEOUT:
+                        logger.warning(f"Camera connection unstable: {consecutive_failures} failures, {time_since_last_frame:.2f}s since last frame")
+                        
+                        # Attempt to reconnect
+                        if self._attempt_reconnection():
+                            consecutive_failures = 0
+                            last_successful_read = time.time()
+                            logger.info("📱 Camera reconnection successful")
+                        else:
+                            logger.error("❌ Camera reconnection failed")
+                            break
+                    else:
+                        time.sleep(0.1)
                     
             except Exception as e:
                 logger.error(f"Error in capture thread: {e}")
+                consecutive_failures += 1
                 time.sleep(0.1)
+                
+                # Try reconnection after multiple errors
+                if consecutive_failures > 20:
+                    if not self._attempt_reconnection():
+                        break
+                    consecutive_failures = 0
+    
+    def _attempt_reconnection(self) -> bool:
+        """Attempt to reconnect the camera"""
+        try:
+            logger.info("🔄 Attempting camera reconnection...")
+            
+            # Release current connection
+            if self.cap:
+                self.cap.release()
+            
+            time.sleep(1)  # Wait before reconnecting
+            
+            # Reinitialize camera
+            if self.initialize_camera():
+                logger.info("✅ Camera reconnected successfully")
+                return True
+            else:
+                logger.error("❌ Camera reconnection failed")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error during reconnection: {e}")
+            return False
     
     def get_latest_frame(self) -> Optional[np.ndarray]:
         """Get the latest frame from the queue"""

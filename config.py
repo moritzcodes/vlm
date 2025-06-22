@@ -35,6 +35,13 @@ class Config:
     IPHONE_CAMERA_OPTIMIZATION: bool = os.getenv('IPHONE_CAMERA_OPTIMIZATION', 'true').lower() == 'true'
     CAMERA_BUFFER_SIZE: int = int(os.getenv('CAMERA_BUFFER_SIZE', '1'))  # Minimize latency
     
+    # USB iPhone Connection Settings (NEW)
+    USB_IPHONE_OPTIMIZATIONS: bool = os.getenv('USB_IPHONE_OPTIMIZATIONS', 'true').lower() == 'true'
+    USB_CONNECTION_TIMEOUT: int = int(os.getenv('USB_CONNECTION_TIMEOUT', '30000'))  # 30 seconds timeout
+    USB_RECONNECT_ATTEMPTS: int = int(os.getenv('USB_RECONNECT_ATTEMPTS', '3'))
+    USB_FRAME_READ_TIMEOUT: float = float(os.getenv('USB_FRAME_READ_TIMEOUT', '5.0'))  # 5 seconds per frame read
+    KEEP_ALIVE_INTERVAL: float = float(os.getenv('KEEP_ALIVE_INTERVAL', '1.0'))  # Read frame every 1 second to keep connection alive
+    
     # Detection Configuration
     DETECTION_THRESHOLD: float = float(os.getenv('DETECTION_THRESHOLD', '0.5'))
     DETECTION_CONFIDENCE_THRESHOLD: float = float(os.getenv('DETECTION_CONFIDENCE_THRESHOLD', '0.7'))

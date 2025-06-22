@@ -48,9 +48,17 @@ class StreamlitVLMApp:
             
             self.vlm_processor = st.session_state.vlm_processor
             
-            # Initialize camera handler
-            if 'camera_handler' not in st.session_state:
-                st.session_state.camera_handler = CameraHandler()
+            # Initialize camera handler with current camera index
+            if 'camera_handler' not in st.session_state or st.session_state.get('camera_index') != config.CAMERA_INDEX:
+                # Create new camera handler if index changed
+                camera_handler = CameraHandler(camera_index=config.CAMERA_INDEX)
+                if camera_handler.initialize_camera():
+                    st.session_state.camera_handler = camera_handler
+                    st.session_state.camera_index = config.CAMERA_INDEX
+                    logger.info(f"Camera handler initialized for index {config.CAMERA_INDEX}")
+                else:
+                    st.error(f"Failed to initialize camera {config.CAMERA_INDEX}")
+                    return False
             
             self.camera_handler = st.session_state.camera_handler
             
@@ -58,6 +66,7 @@ class StreamlitVLMApp:
             
         except Exception as e:
             st.error(f"Error initializing components: {e}")
+            logger.error(f"Component initialization error: {e}")
             return False
     
     def render_sidebar(self):

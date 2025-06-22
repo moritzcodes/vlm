@@ -72,9 +72,12 @@ class VLMRealTimeApp:
     
     def start_camera_preview(self):
         """Start camera preview window"""
+        # Initialize camera handler if not already done
         if not self.camera_handler:
-            logger.error("Camera not initialized")
-            return
+            self.camera_handler = CameraHandler(camera_index=self.args.camera_index)
+            if not self.camera_handler.initialize_camera():
+                logger.error("Failed to initialize camera")
+                return
         
         logger.info("Starting camera preview... Press 'q' to quit, 's' to save snapshot")
         
