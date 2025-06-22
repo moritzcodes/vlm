@@ -22,6 +22,10 @@ from typing import List, Dict, Optional, Tuple
 from PIL import Image
 from dotenv import load_dotenv
 
+# Import for NATS messaging sketch
+import nats
+import asyncio
+
 load_dotenv()
 
 # Configure logging
@@ -200,6 +204,66 @@ class LiquidHandlerMonitor:
         self.ui_hover_element = None
         self.ui_active_element = None
         self.ui_drag_start = None
+
+        # NATS Messaging for error reporting
+        self.nats_client = None
+        self.sent_error_count = 0
+        self.nats_message_queue = queue.Queue()
+        self._setup_nats_connection()
+
+    def _setup_nats_connection(self):
+        """Setup NATS connection with a single dedicated event loop"""
+        def nats_worker():
+            try:
+                # Create one event loop for all NATS operations
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                async def run_nats():
+                    # Connect to NATS
+                    self.nats_client = await nats.connect("nats://localhost:4222")
+                    logging.info("Connected to NATS server for error broadcasting.")
+                    
+                    # Process messages from queue
+                    while True:
+                        try:
+                            # Check for new messages to send (non-blocking)
+                            try:
+                                subject, message = self.nats_message_queue.get_nowait()
+                                if self.nats_client and self.nats_client.is_connected:
+                                    await self.nats_client.publish(subject, message.encode())
+                                    logging.info(f"Broadcasted error to NATS: {subject}")
+                                self.nats_message_queue.task_done()
+                            except queue.Empty:
+                                pass
+                            
+                            # Small delay to prevent busy waiting
+                            await asyncio.sleep(0.1)
+                            
+                        except Exception as e:
+                            logging.error(f"Error processing NATS message: {e}")
+                            await asyncio.sleep(1)
+                
+                loop.run_until_complete(run_nats())
+                
+            except Exception as e:
+                logging.error(f"NATS worker thread failed: {e}")
+        
+        nats_thread = threading.Thread(target=nats_worker, daemon=True)
+        nats_thread.start()
+
+    def _send_error_to_nats(self, error_event: ErrorEvent):
+        """Send error as a simple string message to NATS via queue"""
+        try:
+            # Create a simple string message
+            error_message = f"ERROR: {error_event.error_type} | {error_event.severity} | {error_event.description} | Step: {error_event.procedure_step} | Time: {error_event.timestamp}"
+            nats_subject = f"lab.error.liquid_handler.{error_event.error_type.replace(' ', '_')}"
+            
+            # Put message in queue for the NATS worker to send
+            self.nats_message_queue.put((nats_subject, error_message))
+            
+        except Exception as e:
+            logging.error(f"Error queuing NATS message: {e}")
 
     def _load_procedures(self) -> Dict[str, List[ProcedureStep]]:
         """Load standard operating procedures"""
@@ -1184,6 +1248,11 @@ DESCRIPTION: [brief status]"""
         
         self.error_events.append(error_event)
         
+        # Send new errors to NATS
+        if len(self.error_events) > self.sent_error_count:
+            self._send_error_to_nats(error_event)
+            self.sent_error_count = len(self.error_events)
+        
         # Log to file
         logging.error(f"ERROR EVENT: {error_type} - {description}")
         
@@ -1384,11 +1453,12 @@ DESCRIPTION: [brief status]"""
                     # Only do expensive compliance checks if not just robot arm blocking
                     arm_blocking = analysis_result.get("arm_blocking", False)
                     if not arm_blocking:
-                        # Check compliance
+                        # Check compliance (these functions may add to self.error_events)
                         self.check_procedure_compliance(analysis_result, frame)
                         self.check_color_compliance(analysis_result, frame)
                         self.check_well_compliance(analysis_result, frame)
                         self.check_safety_compliance(analysis_result, frame)
+
                     else:
                         # Skip expensive compliance checks when arm is blocking
                         print("🤖 Robot arm active - skipping detailed compliance checks")
