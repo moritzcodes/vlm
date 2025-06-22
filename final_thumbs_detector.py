@@ -22,17 +22,47 @@ def find_iphone_camera():
     """Auto-detect iPhone camera index"""
     print("🔍 Searching for iPhone camera...")
     
+    # First try the common iPhone camera index (from ultra_simple_iphone.py)
+    print("📱 Trying camera index 1 (common iPhone camera)...")
+    cap = cv2.VideoCapture(1)
+    if cap.isOpened():
+        ret, frame = cap.read()
+        if ret and frame is not None:
+            height, width = frame.shape[:2]
+            cap.release()
+            print(f"✅ iPhone camera found at index 1: {width}x{height}")
+            return 1
+        cap.release()
+    
+    # If index 1 doesn't work, try auto-detection with flexible resolution criteria
+    print("🔍 Auto-detecting camera with flexible criteria...")
+    
     for i in range(5):
+        if i == 1:  # Skip 1 since we already tried it
+            continue
+            
         cap = cv2.VideoCapture(i)
         if cap.isOpened():
             ret, frame = cap.read()
             if ret and frame is not None:
                 height, width = frame.shape[:2]
-                # iPhone cameras are typically high resolution
-                if width >= 1920 and height >= 1080:
-                    cap.release()
-                    print(f"📱 iPhone camera found at index {i}: {width}x{height}")
-                    return i
+                print(f"📷 Camera {i}: {width}x{height}")
+                
+                # More flexible criteria - any decent resolution camera
+                if width >= 640 and height >= 480:
+                    # Additional check: try to get a few frames to ensure stability
+                    stable = True
+                    for _ in range(3):
+                        ret, test_frame = cap.read()
+                        if not ret:
+                            stable = False
+                            break
+                    
+                    if stable:
+                        cap.release()
+                        print(f"📱 iPhone camera found at index {i}: {width}x{height}")
+                        return i
+                        
             cap.release()
     
     print("❌ No iPhone camera found")
