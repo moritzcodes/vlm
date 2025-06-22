@@ -12,7 +12,6 @@ import os
 import time
 import threading
 import queue
-import io
 from PIL import Image
 from dotenv import load_dotenv
 
@@ -74,20 +73,21 @@ def setup_ai_model():
     
     if not google_project:
         print("❌ GOOGLE_CLOUD_PROJECT not found in .env file")
-        print("Set up Vertex AI by adding: GOOGLE_CLOUD_PROJECT=your_project_id")
         return None
     
     try:
         import vertexai
         from vertexai.generative_models import GenerativeModel
         
+        # Initialize Vertex AI
         vertexai.init(project=google_project, location="us-central1")
-        model = GenerativeModel('gemini-1.5-pro')
-        print("🤖 Vertex AI Gemini 1.5 Pro loaded")
+        model = GenerativeModel('gemini-2.5-pro')
+        print("🤖 Vertex AI Gemini 2.5 Pro loaded")
         return model
         
     except Exception as e:
         print(f"❌ Vertex AI setup failed: {e}")
+        print("Make sure you're authenticated with: gcloud auth application-default login")
         return None
 
 class ThumbsUpDetector:
@@ -134,13 +134,14 @@ class ThumbsUpDetector:
         return True
     
     def analyze_frame_with_gemini(self, frame):
-        """Send frame to Gemini for analysis"""
+        """Send frame to Vertex AI Gemini for analysis"""
         try:
-            # Convert frame to Vertex AI format
+            # Convert frame to RGB format
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(rgb_frame)
             
             # Convert to bytes for Vertex AI
+            import io
             img_buffer = io.BytesIO()
             pil_image.save(img_buffer, format='JPEG', quality=85)
             img_bytes = img_buffer.getvalue()
@@ -152,18 +153,25 @@ class ThumbsUpDetector:
             # Clear, simple prompt
             prompt = """Analyze this image:
 
-1. Describe what you see (people, objects, actions)
+1. Describe what you see (people, objects, actions)  
 2. Check for thumbs up gestures (YES/NO)
 
 Respond exactly like this:
 SCENE: [brief description]
 THUMBS_UP: [YES or NO]"""
 
+            # Send to Vertex AI Gemini
             response = self.model.generate_content([prompt, image_part])
+            
+            # Debug: Print the actual response
+            print(f"🔍 DEBUG - Raw response: {response.text[:200]}...")
+            
             return response.text
             
         except Exception as e:
-            return f"Error: {str(e)[:50]}"
+            error_msg = f"Error: {str(e)}"
+            print(f"🔍 DEBUG - Exception: {error_msg}")
+            return error_msg
     
     def parse_response(self, response_text):
         """Parse Gemini response"""
@@ -332,7 +340,7 @@ THUMBS_UP: [YES or NO]"""
                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
         
         # Frame info
-        cv2.putText(frame, f"Frame: {frame_count} | Gemini 1.5 Pro", (20, 95), 
+        cv2.putText(frame, f"Frame: {frame_count} | Gemini 2.5 Pro", (20, 95), 
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
         
         cv2.putText(frame, "Press 'q' to quit, 's' to analyze now", (20, 115), 
