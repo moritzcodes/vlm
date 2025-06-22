@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_213002",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:29:54.777717",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL: A soda can is on the robot deck, completely obstructing the camera's view. This poses a significant risk of collision, spills, and contamination, and prevents the robot from operating safely. The work area must be cleared immediately.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL: A soda can is on the robot deck, completely obstructing the camera's view. This poses a significant risk of collision, spills, and contamination, and prevents the robot from operating safely. The work area must be cleared immediately.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_212954.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}

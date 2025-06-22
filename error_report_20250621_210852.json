@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_210852",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:08:29.168606",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Cannot visually confirm safety of workspace due to obstructed camera feed.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Cannot visually confirm safety of workspace due to obstructed camera feed.",
+      "confidence": 0.95,
+      "image_path": "error_images/safety_concern_20250621_210829.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}

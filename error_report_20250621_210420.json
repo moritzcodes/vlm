@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_210420",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:04:01.090406",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [Loss of visual monitoring due to black camera feed.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[Loss of visual monitoring due to black camera feed.]",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_210401.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}

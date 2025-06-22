@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_214814",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:47:25.788873",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: Monitoring system failure. The system is not providing a view of the robot, creating a significant operational risk as any real-time issues like spills, crashes, or protocol errors would go undetected.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "Monitoring system failure. The system is not providing a view of the robot, creating a significant operational risk as any real-time issues like spills, crashes, or protocol errors would go undetected.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_214725.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}

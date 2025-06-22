@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_204603",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T20:45:47.891027",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: OK. The system is not yet operational, and no physical hardware is visible to assess.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "OK. The system is not yet operational, and no physical hardware is visible to assess.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_204547.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}

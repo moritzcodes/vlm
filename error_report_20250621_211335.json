@@ -1,0 +1,42 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_211335",
+    "total_errors": 2,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:13:02.633433",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [Loss of visual monitoring prevents safety verification of the robot's state and workspace.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[Loss of visual monitoring prevents safety verification of the robot's state and workspace.]",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_211302.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T21:13:16.023127",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [Potential uncontrolled or rapid camera movement. The cause of the motion blur is unknown and could indicate a physical problem with the camera mount or the robot itself. Immediate physical inspection is required.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[Potential uncontrolled or rapid camera movement. The cause of the motion blur is unknown and could indicate a physical problem with the camera mount or the robot itself. Immediate physical inspection is required.]",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_211316.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 2
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 2
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 2
+    }
+  }
+}

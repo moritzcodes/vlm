@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_210442",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:04:39.535116",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [The camera feed is non-functional, making it impossible to monitor the robot for safety or operational issues. The cause of the severe blur (e.g., physical impact, extreme vibration) could itself be a safety hazard.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[The camera feed is non-functional, making it impossible to monitor the robot for safety or operational issues. The cause of the severe blur (e.g., physical impact, extreme vibration) could itself be a safety hazard.]",
+      "confidence": 0.95,
+      "image_path": "error_images/safety_concern_20250621_210439.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_213825",
+    "total_errors": 2,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:38:01.880006",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [\"Camera Malfunction. The inability to visually monitor the robot's workspace is a critical failure, as it's impossible to confirm the state of the experiment, detect spills, or identify potential mechanical issues.\"]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[\"Camera Malfunction. The inability to visually monitor the robot's workspace is a critical failure, as it's impossible to confirm the state of the experiment, detect spills, or identify potential mechanical issues.\"]",
+      "confidence": 0.5,
+      "image_path": "error_images/safety_concern_20250621_213801.jpg"
+    },
+    {
+      "timestamp": "2025-06-21T21:38:16.761911",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: [The monitoring system has critically failed. The camera is not aimed at the instrument, which prevents any visual safety or operational oversight of the robot.]",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "[The monitoring system has critically failed. The camera is not aimed at the instrument, which prevents any visual safety or operational oversight of the robot.]",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_213816.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 2
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 2
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 2
+    }
+  }
+}

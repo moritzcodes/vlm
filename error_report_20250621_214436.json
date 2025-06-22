@@ -1,0 +1,31 @@
+{
+  "monitoring_session": {
+    "timestamp": "20250621_214436",
+    "total_errors": 1,
+    "procedures_monitored": []
+  },
+  "error_events": [
+    {
+      "timestamp": "2025-06-21T21:44:32.627427",
+      "error_type": "SAFETY_CONCERN",
+      "severity": "HIGH",
+      "description": "Safety issue detected: CRITICAL: The camera is completely misaligned, providing no oversight of the robot's operation. This prevents detection of any potential hardware failures, spills, or safety incidents. The presence of beverages would be a violation if this were the lab bench.",
+      "procedure_step": "UNKNOWN",
+      "expected_state": "Safe operation",
+      "actual_state": "CRITICAL: The camera is completely misaligned, providing no oversight of the robot's operation. This prevents detection of any potential hardware failures, spills, or safety incidents. The presence of beverages would be a violation if this were the lab bench.",
+      "confidence": 1.0,
+      "image_path": "error_images/safety_concern_20250621_214432.jpg"
+    }
+  ],
+  "error_summary": {
+    "by_severity": {
+      "HIGH": 1
+    },
+    "by_type": {
+      "SAFETY_CONCERN": 1
+    },
+    "by_procedure_step": {
+      "UNKNOWN": 1
+    }
+  }
+}
