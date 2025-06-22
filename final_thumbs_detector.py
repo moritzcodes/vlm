@@ -68,26 +68,27 @@ def find_iphone_camera():
     return None
 
 def setup_ai_model():
-    """Setup Vertex AI Gemini"""
-    google_project = os.getenv('GOOGLE_CLOUD_PROJECT')
+    """Setup Google Gen AI SDK for Gemini 2.5 Pro using Express Mode"""
+    api_key = os.getenv('GOOGLE_API_KEY')
     
-    if not google_project:
-        print("❌ GOOGLE_CLOUD_PROJECT not found in .env file")
+    if not api_key:
+        print("❌ GOOGLE_API_KEY not found in .env file")
         return None
     
     try:
-        import vertexai
-        from vertexai.generative_models import GenerativeModel
+        from google import genai
         
-        # Initialize Vertex AI
-        vertexai.init(project=google_project, location="us-central1")
-        model = GenerativeModel('gemini-2.5-pro')
-        print("🤖 Vertex AI Gemini 2.5 Pro loaded")
-        return model
+        # Initialize Google Gen AI client with Express Mode (API key)
+        client = genai.Client(
+            vertexai=False, 
+            api_key=api_key
+        )
+        print("🤖 Google Gen AI Gemini 2.5 Pro loaded (Express Mode)")
+        return client
         
     except Exception as e:
-        print(f"❌ Vertex AI setup failed: {e}")
-        print("Make sure you're authenticated with: gcloud auth application-default login")
+        print(f"❌ Google Gen AI setup failed: {e}")
+        print("Make sure your GOOGLE_API_KEY is valid for AI Studio")
         return None
 
 class ThumbsUpDetector:
@@ -109,7 +110,7 @@ class ThumbsUpDetector:
         if self.camera_index is None:
             return False
         
-        # Setup AI model
+        # Setup AI client
         self.model = setup_ai_model()
         if self.model is None:
             return False
@@ -134,21 +135,25 @@ class ThumbsUpDetector:
         return True
     
     def analyze_frame_with_gemini(self, frame):
-        """Send frame to Vertex AI Gemini for analysis"""
+        """Send frame to Google Gen AI Gemini 2.5 Pro for analysis"""
         try:
             # Convert frame to RGB format
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(rgb_frame)
             
-            # Convert to bytes for Vertex AI
+            # Convert to bytes for Google Gen AI
             import io
             img_buffer = io.BytesIO()
             pil_image.save(img_buffer, format='JPEG', quality=85)
             img_bytes = img_buffer.getvalue()
             
-            # Create Vertex AI Part
-            from vertexai.generative_models import Part
-            image_part = Part.from_data(data=img_bytes, mime_type="image/jpeg")
+            from google.genai import types
+            
+            # Create Google Gen AI Part
+            image_part = types.Part.from_bytes(
+                data=img_bytes, 
+                mime_type="image/jpeg"
+            )
             
             # Clear, simple prompt
             prompt = """Analyze this image:
@@ -160,13 +165,22 @@ Respond exactly like this:
 SCENE: [brief description]
 THUMBS_UP: [YES or NO]"""
 
-            # Send to Vertex AI Gemini
-            response = self.model.generate_content([prompt, image_part])
+            # Send to Google Gen AI Gemini 2.5 Pro
+            response = self.model.models.generate_content(
+                model="gemini-2.5-pro",
+                contents=[
+                    types.Content(parts=[
+                        types.Part.from_text(text=prompt),
+                        image_part
+                    ])
+                ]
+            )
             
             # Debug: Print the actual response
-            print(f"🔍 DEBUG - Raw response: {response.text[:200]}...")
+            response_text = response.text
+            print(f"🔍 DEBUG - Raw response: {response_text[:200]}...")
             
-            return response.text
+            return response_text
             
         except Exception as e:
             error_msg = f"Error: {str(e)}"
